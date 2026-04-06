@@ -1,0 +1,20 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title?: string;
+  storeName?: string;
+}
+
+const { title, storeName } = Astro.props;
+const pageTitle = storeName ? `${storeName} | Store Management App` : title;
+---
+
+<BaseLayout title={pageTitle}>
+  {storeName && (
+    <div class="mb-4">
+      <h1 class="text-2xl font-bold text-gray-900">{storeName}</h1>
+    </div>
+  )}
+  <slot />
+</BaseLayout>

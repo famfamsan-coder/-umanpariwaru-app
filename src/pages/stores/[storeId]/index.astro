@@ -1,0 +1,52 @@
+---
+import StoreLayout from '../../../layouts/StoreLayout.astro';
+import { getDb } from '../../../lib/db';
+
+const { storeId } = Astro.params;
+const db = getDb();
+const result = await db.execute({ sql: 'SELECT id, name FROM stores WHERE id = ?', args: [storeId ?? ''] });
+const store = result.rows[0] as { id: number; name: string } | undefined;
+if (!store) return Astro.redirect('/stores');
+
+const sections = [
+  { title: 'Role Management',    desc: 'Manuals & responsibilities',         icon: '👤', href: `/stores/${store.id}/roles`,     color: 'bg-blue-500' },
+  { title: 'Routine Checklist',  desc: 'Morning & evening task checks',      icon: '✅', href: `/stores/${store.id}/routine`,   color: 'bg-[#16a085]' },
+  { title: "Today's Tasks",      desc: 'Daily spot task management',         icon: '📋', href: `/stores/${store.id}/tasks`,     color: 'bg-amber-500' },
+  { title: 'Inventory & Orders', desc: 'Stock levels & order tracking',      icon: '📦', href: `/stores/${store.id}/inventory`, color: 'bg-purple-500' },
+  { title: 'Cleaning List',      desc: 'Cleaning schedule management',       icon: '🧹', href: `/stores/${store.id}/cleaning`,  color: 'bg-rose-500' },
+];
+---
+
+<StoreLayout title={`${store.name} | Store Management App`}>
+  <div class="flex items-center gap-2 text-sm text-gray-500 mb-6">
+    <a href="/stores" class="hover:text-[#16a085] transition-colors">← Back to Store Selection</a>
+    <span>/</span>
+    <span class="text-[#1a1a2e] font-medium">{store.name}</span>
+  </div>
+
+  <div class="flex items-center gap-4 mb-8">
+    <div class="w-14 h-14 rounded-2xl bg-[#1a1a2e] flex items-center justify-center flex-shrink-0">
+      <span class="text-3xl">🏬</span>
+    </div>
+    <div>
+      <h1 class="text-2xl font-bold text-[#1a1a2e]">{store.name}</h1>
+      <p class="text-gray-500 text-sm">Dashboard</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    {sections.map((section) => (
+      <a href={section.href}
+        class="group flex items-center gap-4 bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:scale-[1.02] hover:border-[#16a085] transition-all duration-200 p-5">
+        <div class={`w-12 h-12 rounded-xl ${section.color} flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
+          <span class="text-2xl">{section.icon}</span>
+        </div>
+        <div class="min-w-0">
+          <h2 class="font-bold text-[#1a1a2e] group-hover:text-[#16a085] transition-colors">{section.title}</h2>
+          <p class="text-sm text-gray-400 truncate">{section.desc}</p>
+        </div>
+        <span class="ml-auto text-gray-300 group-hover:text-[#16a085] transition-colors flex-shrink-0">›</span>
+      </a>
+    ))}
+  </div>
+</StoreLayout>

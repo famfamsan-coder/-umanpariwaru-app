@@ -1,0 +1,13 @@
+---
+import StoreLayout from '../../layouts/StoreLayout.astro';
+import AdminPanel from '../../components/admin/AdminPanel';
+
+if (Astro.locals.user?.role !== 'admin') return Astro.redirect('/stores');
+---
+<StoreLayout title="Admin Panel">
+  <div class="flex items-center gap-3 mb-6">
+    <a href="/stores" class="text-sm text-gray-400 hover:text-[#16a085] transition-colors">← Back to Store Selection</a>
+    <h1 class="text-xl font-bold text-[#1a1a2e]">Admin Panel</h1>
+  </div>
+  <AdminPanel client:load />
+</StoreLayout>

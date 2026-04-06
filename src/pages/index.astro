@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const error = Astro.url.searchParams.get('error');
+const errorMessages: Record<string, string> = {
+  invalid: 'Incorrect username or password.',
+  required: 'Please enter your username and password.',
+};
+const errorMessage = error ? (errorMessages[error] ?? 'Login failed.') : null;
+---
+
+<BaseLayout title="Login | Store Management App">
+  <div class="min-h-[calc(100vh-64px)] flex items-center justify-center px-4">
+    <div class="w-full max-w-sm">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#16a085] mb-4">
+          <span class="text-3xl">🏪</span>
+        </div>
+        <h1 class="text-2xl font-bold text-[#1a1a2e]">Store Management App</h1>
+        <p class="text-gray-500 text-sm mt-1">Staff & Admin Login</p>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+        {errorMessage && (
+          <div class="mb-5 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm flex items-center gap-2">
+            <span>⚠️</span>
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
+        <form method="POST" action="/api/auth/login" class="space-y-5">
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700 mb-1.5">Username</label>
+            <input
+              id="username" name="username" type="text" required autocomplete="username"
+              class="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#16a085] focus:border-transparent transition"
+              placeholder="username"
+            />
+          </div>
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
+            <input
+              id="password" name="password" type="password" required autocomplete="current-password"
+              class="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#16a085] focus:border-transparent transition"
+              placeholder="••••••••"
+            />
+          </div>
+          <button type="submit"
+            class="w-full py-3.5 px-4 bg-[#16a085] hover:bg-[#0e7a65] text-white font-semibold rounded-xl transition-colors text-base">
+            Sign In
+          </button>
+        </form>
+      </div>
+
+      <p class="text-center text-xs text-gray-400 mt-6">© 2025 Store Management App</p>
+    </div>
+  </div>
+</BaseLayout>

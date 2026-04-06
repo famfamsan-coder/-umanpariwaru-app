@@ -1,0 +1,58 @@
+---
+import StoreLayout from '../../layouts/StoreLayout.astro';
+import { getDb } from '../../lib/db';
+
+if (!Astro.locals.user) return Astro.redirect('/');
+const user = Astro.locals.user;
+const db = getDb();
+const result = await db.execute('SELECT id, name FROM stores ORDER BY sort_order');
+const stores = result.rows as { id: number; name: string }[];
+---
+
+<StoreLayout title="Select Store | Store Management App">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-2xl font-bold text-[#1a1a2e]">Select Store</h1>
+      <p class="text-gray-500 text-sm mt-0.5">
+        Welcome, <span class="font-medium text-[#1a1a2e]">{user.username}</span>
+        {user.role === 'admin' && <span class="ml-1 text-xs bg-[#16a085] text-white px-2 py-0.5 rounded-full">Admin</span>}
+      </p>
+    </div>
+    <div class="flex items-center gap-2">
+      {user.role === 'admin' && (
+        <a href="/admin"
+          class="px-4 py-2 text-sm font-medium text-[#16a085] border border-[#16a085] rounded-lg hover:bg-[#16a085] hover:text-white transition-colors">
+          ⚙️ Admin Settings
+        </a>
+      )}
+      <a href="/api/auth/logout"
+        class="px-4 py-2 text-sm font-medium text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+        Sign Out
+      </a>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    {stores.map((store) => (
+      <a href={`/stores/${store.id}`}
+        class="group block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:scale-[1.02] hover:border-[#16a085] transition-all duration-200 p-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-[#1a1a2e] flex items-center justify-center flex-shrink-0 group-hover:bg-[#16a085] transition-colors">
+            <span class="text-2xl">🏬</span>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-[#1a1a2e] group-hover:text-[#16a085] transition-colors">{store.name}</h2>
+            <p class="text-sm text-gray-400">Tap to open →</p>
+          </div>
+        </div>
+      </a>
+    ))}
+  </div>
+
+  {stores.length === 0 && (
+    <div class="text-center py-16 text-gray-400">
+      <p class="text-4xl mb-3">🏪</p>
+      <p>No stores registered yet.</p>
+    </div>
+  )}
+</StoreLayout>

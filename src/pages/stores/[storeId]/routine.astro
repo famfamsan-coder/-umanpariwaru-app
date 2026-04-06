@@ -1,0 +1,25 @@
+---
+import StoreLayout from '../../../layouts/StoreLayout.astro';
+import RoutineChecklist from '../../../components/routine/RoutineChecklist';
+import { getDb } from '../../../lib/db';
+
+const { storeId } = Astro.params;
+const db = getDb();
+const storeResult = await db.execute({ sql: 'SELECT id, name FROM stores WHERE id = ?', args: [storeId ?? ''] });
+const store = storeResult.rows[0] as { id: number; name: string } | undefined;
+if (!store) return Astro.redirect('/stores');
+---
+<StoreLayout title={`Routine Checklist | ${store.name}`}>
+  <nav class="flex items-center gap-2 text-sm text-gray-500 mb-6 flex-wrap">
+    <a href="/stores" class="hover:text-[#16a085] transition-colors">Store Selection</a>
+    <span>/</span>
+    <a href={`/stores/${store.id}`} class="hover:text-[#16a085] transition-colors">{store.name}</a>
+    <span>/</span>
+    <span class="text-[#1a1a2e] font-medium">Routine Checklist</span>
+  </nav>
+  <div class="flex items-center gap-3 mb-6">
+    <a href={`/stores/${store.id}`} class="text-sm text-gray-400 hover:text-[#16a085] transition-colors">← Back</a>
+    <h1 class="text-xl font-bold text-[#1a1a2e]">Routine Checklist</h1>
+  </div>
+  <RoutineChecklist storeId={store.id} client:load />
+</StoreLayout>
