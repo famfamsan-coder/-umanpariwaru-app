@@ -211,19 +211,19 @@ async function seed() {
 
       await db.execute({
         sql: 'UPDATE roles SET manual_content = ?, responsibility_content = ? WHERE id = ?',
-        args: [tmpl.manual, tmpl.responsibility, role.id],
+        args: [tmpl.manual, tmpl.responsibility, role.id as number],
       });
 
       for (let i = 0; i < tmpl.checklist.length; i++) {
         await db.execute({
           sql: 'INSERT INTO role_checklist_items (role_id, title, sort_order) VALUES (?, ?, ?)',
-          args: [role.id, tmpl.checklist[i], i + 1],
+          args: [role.id as number, tmpl.checklist[i], i + 1],
         });
       }
       for (let i = 0; i < tmpl.tasks.length; i++) {
         await db.execute({
           sql: 'INSERT INTO role_task_items (role_id, title, sort_order) VALUES (?, ?, ?)',
-          args: [role.id, tmpl.tasks[i], i + 1],
+          args: [role.id as number, tmpl.tasks[i], i + 1],
         });
       }
     }
@@ -375,15 +375,15 @@ async function seed() {
 
     const stores = await db.execute('SELECT id FROM stores ORDER BY sort_order');
     for (const store of stores.rows) {
-      const roles = await db.execute({ sql: 'SELECT id, sort_order FROM roles WHERE store_id = ? ORDER BY sort_order', args: [store.id] });
+      const roles = await db.execute({ sql: 'SELECT id, sort_order FROM roles WHERE store_id = ? ORDER BY sort_order', args: [store.id as number] });
       for (const role of roles.rows) {
         const tmpl = ROUTINE_TEMPLATES[(role.sort_order as number) - 1];
         if (!tmpl) continue;
         for (let i = 0; i < tmpl.morning.length; i++) {
-          await db.execute({ sql: 'INSERT INTO routine_items (store_id, role_id, title, period, sort_order) VALUES (?, ?, ?, ?, ?)', args: [store.id, role.id, tmpl.morning[i], 'morning', i + 1] });
+          await db.execute({ sql: 'INSERT INTO routine_items (store_id, role_id, title, period, sort_order) VALUES (?, ?, ?, ?, ?)', args: [store.id as number, role.id as number, tmpl.morning[i], 'morning', i + 1] });
         }
         for (let i = 0; i < tmpl.evening.length; i++) {
-          await db.execute({ sql: 'INSERT INTO routine_items (store_id, role_id, title, period, sort_order) VALUES (?, ?, ?, ?, ?)', args: [store.id, role.id, tmpl.evening[i], 'evening', i + 1] });
+          await db.execute({ sql: 'INSERT INTO routine_items (store_id, role_id, title, period, sort_order) VALUES (?, ?, ?, ?, ?)', args: [store.id as number, role.id as number, tmpl.evening[i], 'evening', i + 1] });
         }
       }
     }
@@ -453,7 +453,7 @@ async function seed() {
     const stores = await db.execute('SELECT id FROM stores ORDER BY sort_order');
     for (const store of stores.rows) {
       for (const tmpl of SUPPLIER_TEMPLATES) {
-        const sr = await db.execute({ sql: 'INSERT INTO suppliers (store_id, name, sort_order) VALUES (?, ?, ?)', args: [store.id, tmpl.name, tmpl.sort_order] });
+        const sr = await db.execute({ sql: 'INSERT INTO suppliers (store_id, name, sort_order) VALUES (?, ?, ?)', args: [store.id as number, tmpl.name, tmpl.sort_order] });
         const supplierId = Number(sr.lastInsertRowid);
         for (let i = 0; i < tmpl.ingredients.length; i++) {
           const ing = tmpl.ingredients[i];
@@ -484,7 +484,7 @@ async function seed() {
 
     const stores = await db.execute('SELECT id FROM stores ORDER BY sort_order');
     for (const store of stores.rows) {
-      const roles = await db.execute({ sql: 'SELECT id, sort_order FROM roles WHERE store_id = ? ORDER BY sort_order', args: [store.id] });
+      const roles = await db.execute({ sql: 'SELECT id, sort_order FROM roles WHERE store_id = ? ORDER BY sort_order', args: [store.id as number] });
       for (const role of roles.rows) {
         const tmpl = CLEANING_TEMPLATES[(role.sort_order as number) - 1];
         if (!tmpl) continue;
@@ -492,7 +492,7 @@ async function seed() {
         for (let si = 0; si < tmpl.spots.length; si++) {
           const sr = await db.execute({
             sql: 'INSERT INTO cleaning_spots (store_id, role_id, name, sort_order) VALUES (?, ?, ?, ?)',
-            args: [store.id, role.id, tmpl.spots[si], si + 1],
+            args: [store.id as number, role.id as number, tmpl.spots[si], si + 1],
           });
           const spotId = Number(sr.lastInsertRowid);
 
