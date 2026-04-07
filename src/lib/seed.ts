@@ -185,7 +185,7 @@ async function seed() {
 
   // ── Stores & Roles ──
   const storeCount = (await db.execute('SELECT COUNT(*) as count FROM stores')).rows[0]?.count as number;
-  if (storeCount === 0) {
+  if (Number(storeCount) === 0) {
     const storeIds: number[] = [];
     for (let i = 1; i <= 3; i++) {
       const r = await db.execute({ sql: 'INSERT INTO stores (name, sort_order) VALUES (?, ?)', args: [`Store ${i}`, i] });
@@ -203,7 +203,7 @@ async function seed() {
 
   // ── Role Content ──
   const checklistCount = (await db.execute('SELECT COUNT(*) as count FROM role_checklist_items')).rows[0]?.count as number;
-  if (checklistCount === 0) {
+  if (Number(checklistCount) === 0) {
     const roles = await db.execute('SELECT id, sort_order FROM roles ORDER BY sort_order');
     for (const role of roles.rows) {
       const tmpl = ROLE_TEMPLATES[(role.sort_order as number) - 1];
@@ -234,7 +234,7 @@ async function seed() {
 
   // ── Routine Items ──
   const routineCount = (await db.execute('SELECT COUNT(*) as count FROM routine_items')).rows[0]?.count as number;
-  if (routineCount === 0) {
+  if (Number(routineCount) === 0) {
     const ROUTINE_TEMPLATES = [
       {
         position: 1,
@@ -394,7 +394,7 @@ async function seed() {
 
   // ── Suppliers & Ingredients ──
   const supplierCount = (await db.execute('SELECT COUNT(*) as count FROM suppliers')).rows[0]?.count as number;
-  if (supplierCount === 0) {
+  if (Number(supplierCount) === 0) {
     const SUPPLIER_TEMPLATES = [
       {
         name: 'Prime Meats Co.',
@@ -468,7 +468,7 @@ async function seed() {
 
   // ── Cleaning Spots & Schedule ──
   const cleaningCount = (await db.execute('SELECT COUNT(*) as count FROM cleaning_spots')).rows[0]?.count as number;
-  if (cleaningCount === 0) {
+  if (Number(cleaningCount) === 0) {
     const CLEANING_TEMPLATES = [
       { position: 1, spots: ['Dining room floor', 'Tables and chairs', 'Windows and glass surfaces', 'Entrance door', 'Counter area', 'Shelves and display space', 'Light fixtures', 'Walls and baseboards', 'AC filters', 'Exhaust fan'] },
       { position: 2, spots: ['Register counter', 'Payment terminal and POS monitor', 'Under-counter storage', 'Waiting area', 'Menu stands', 'Umbrella stand area', 'Entrance mat (inside)', 'Restroom entrance area', 'Chair legs', 'Drink bar area'] },
