@@ -420,12 +420,12 @@ function RoutineSection() {
     setItems(prev => [...prev, newItem]);
   };
 
-  const updateItem = async (id: number, title: string) => {
+  const updateItem = async (id: number, fields: Partial<RoutineItem>) => {
     await apiFetch(`/api/admin/routine-items/${id}`, {
       method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title }),
+      body: JSON.stringify(fields),
     });
-    setItems(prev => prev.map(i => i.id === id ? { ...i, title } : i));
+    setItems(prev => prev.map(i => i.id === id ? { ...i, ...fields } : i));
   };
 
   const deleteItem = async (id: number) => {
@@ -464,7 +464,12 @@ function RoutineSection() {
               <div className="space-y-1.5">
                 {(period === 'morning' ? morning : evening).map(item => (
                   <div key={item.id} className="flex items-center gap-2">
-                    <InlineInput value={item.title} onSave={v => updateItem(item.id, v)} className="flex-1 text-sm text-gray-700" />
+                    <InlineInput value={item.title} onSave={v => updateItem(item.id, { title: v })} className="flex-1 text-sm text-gray-700" />
+                    <button
+                      onClick={() => updateItem(item.id, { period: period === 'morning' ? 'evening' : 'morning' })}
+                      className="text-xs px-2 py-0.5 border border-gray-200 rounded-md hover:border-[#16a085] text-gray-500 hover:text-[#16a085] transition-colors flex-shrink-0"
+                      title={`Move to ${period === 'morning' ? 'Evening' : 'Morning'}`}
+                    >→{period === 'morning' ? '🌙' : '☀'}</button>
                     <DeleteBtn onDelete={() => deleteItem(item.id)} />
                   </div>
                 ))}

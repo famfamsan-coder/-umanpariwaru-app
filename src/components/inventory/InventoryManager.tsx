@@ -238,8 +238,8 @@ export default function InventoryManager({ storeId }: Props) {
                 <tr className="bg-[#1a1a2e] text-white">
                   <th className="text-left px-4 py-3 font-medium w-40">Ingredient</th>
                   <th className="text-center px-3 py-3 font-medium w-12">Unit</th>
-                  <th className="text-right px-3 py-3 font-medium w-28">Current Stock</th>
                   <th className="text-right px-3 py-3 font-medium w-28">Required</th>
+                  <th className="text-right px-3 py-3 font-medium w-28">Current Stock</th>
                   <th className="text-right px-4 py-3 font-medium w-24">Order Qty</th>
                 </tr>
               </thead>
@@ -256,8 +256,8 @@ export default function InventoryManager({ storeId }: Props) {
                         <input
                           type="text"
                           inputMode="decimal"
-                          value={v.current}
-                          onChange={e => handleInput(ing.id, 'current', e.target.value)}
+                          value={v.required}
+                          onChange={e => handleInput(ing.id, 'required', e.target.value)}
                           placeholder="0"
                           className="w-full text-right px-2 py-1 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16a085] focus:border-transparent bg-white"
                         />
@@ -266,8 +266,8 @@ export default function InventoryManager({ storeId }: Props) {
                         <input
                           type="text"
                           inputMode="decimal"
-                          value={v.required}
-                          onChange={e => handleInput(ing.id, 'required', e.target.value)}
+                          value={v.current}
+                          onChange={e => handleInput(ing.id, 'current', e.target.value)}
                           placeholder="0"
                           className="w-full text-right px-2 py-1 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#16a085] focus:border-transparent bg-white"
                         />

@@ -10,6 +10,7 @@ export const PATCH: APIRoute = async ({ request, params, locals }) => {
   const fields: string[] = [];
   const args: (string | number | null)[] = [];
   if (typeof body.title === 'string' && body.title.trim()) { fields.push('title = ?'); args.push(body.title.trim()); }
+  if (body.period === 'morning' || body.period === 'evening') { fields.push('period = ?'); args.push(body.period); }
   if (typeof body.sort_order === 'number') { fields.push('sort_order = ?'); args.push(body.sort_order); }
 
   if (!fields.length) return new Response(JSON.stringify({ error: 'No fields to update' }), { status: 400 });
